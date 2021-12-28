@@ -47,7 +47,11 @@ defmodule Glific.Application do
       Glific.State,
 
       # Add the broadcast task supervisor
-      {Task.Supervisor, name: Glific.Broadcast.Supervisor}
+      {Task.Supervisor, name: Glific.Broadcast.Supervisor},
+
+      # Add the telegram webhook listener
+      ExGram,
+      {Glific.Telegram.Bot, [method: :polling, token: "5064280920:AAEOBnEXBgE55C7BOqTJnt0PyvpVNY1SfWY"]}
     ]
 
     # Add this :telemetry.attach/4 for oban success/failure call:

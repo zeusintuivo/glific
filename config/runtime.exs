@@ -57,3 +57,6 @@ config :glific, Glific.Vault,
 config :stripity_stripe,
   api_key: env!("STRIPE_API_KEY", :string!),
   signing_secret: env!("STRIPE_SIGNING_SECRET", :string!)
+
+config :ex_gram,
+  token: env!("TELEGRAM_BOT_TOKEN", :string, "This is not a valid token")
