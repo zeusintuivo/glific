@@ -53,11 +53,11 @@ defmodule Glific.Application do
 
       # Add the telegram webhook listener
       ExGram,
-      {Glific.Telegram.Bot, [
-          method: :polling,
-          token: Application.fetch_env!(:ex_gram, :token)
-        ]
-      }
+      {Glific.Telegram.Bot,
+       [
+         method: :polling,
+         token: Application.fetch_env!(:ex_gram, :token)
+       ]}
     ]
 
     # Add this :telemetry.attach/4 for oban success/failure call:

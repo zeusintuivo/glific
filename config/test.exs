@@ -62,3 +62,5 @@ config :glific,
   ]
 
 config :glific, Glific.Communications.Mailer, adapter: Swoosh.Adapters.Test
+
+config :ex_gram, adapter: ExGram.Adapter.Test
