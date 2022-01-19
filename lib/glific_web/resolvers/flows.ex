@@ -8,7 +8,9 @@ defmodule GlificWeb.Resolvers.Flows do
   alias Glific.{
     Contacts.Contact,
     Flows,
+    Flows.Broadcast,
     Flows.Flow,
+    Flows.FlowContext,
     Groups.Group,
     Repo,
     State,
@@ -144,6 +146,33 @@ defmodule GlificWeb.Resolvers.Flows do
   end
 
   @doc """
+  Resume a flow for a contact
+  """
+  @spec resume_contact_flow(
+          Absinthe.Resolution.t(),
+          %{flow_id: integer | String.t(), contact_id: integer, result: map()},
+          %{
+            context: map()
+          }
+        ) ::
+          {:ok, any} | {:error, any}
+  def resume_contact_flow(_, %{flow_id: flow_id, contact_id: contact_id, result: result}, %{
+        context: %{current_user: user}
+      }) do
+    with {:ok, contact} <-
+           Repo.fetch_by(Contact, %{id: contact_id, organization_id: user.organization_id}),
+         {:ok, flow_id} <- Glific.parse_maybe_integer(flow_id) do
+      case FlowContext.resume_contact_flow(contact, flow_id, result) do
+        {:ok, _flow_context, _messages} ->
+          {:ok, %{success: true}}
+
+        {:error, message} ->
+          {:ok, %{success: true, errors: %{key: "Flow", message: message}}}
+      end
+    end
+  end
+
+  @doc """
   Start a flow for all contacts of a group
   """
   @spec start_group_flow(Absinthe.Resolution.t(), %{flow_id: integer, group_id: integer}, %{
@@ -186,4 +215,12 @@ defmodule GlificWeb.Resolvers.Flows do
       {:ok, %{flow: flow}}
     end
   end
+
+  @doc """
+  Get broadcast stats for a flow
+  """
+  @spec broadcast_stats(Absinthe.Resolution.t(), map(), %{context: map()}) ::
+          {:ok, any} | {:error, any}
+  def broadcast_stats(_, %{flow_boradcast_id: flow_boradcast_id}, _),
+    do: Broadcast.broadcast_stats(flow_boradcast_id)
 end

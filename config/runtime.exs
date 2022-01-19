@@ -60,3 +60,8 @@ config :stripity_stripe,
 
 config :ex_gram,
   token: env!("TELEGRAM_BOT_TOKEN", :string, "This is not a valid token")
+
+config :glific, Glific.Communications.Mailer,
+  region: env!("SES_REGION", :string!, "This is not a Region"),
+  access_key: env!("SES_KEY", :string!, "This is not a Key"),
+  secret: env!("SES_SECRET", :string!, "This is not a Secret")

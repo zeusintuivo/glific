@@ -396,11 +396,12 @@ defmodule Glific.Messages do
   end
 
   @spec parse_interactive_message_fields(map(), map()) :: map()
-  defp parse_interactive_message_fields(attrs, message_vars),
-    do:
-      Map.merge(attrs, %{
-        interactive_content: MessageVarParser.parse_map(attrs[:interactive_content], message_vars)
-      })
+  defp parse_interactive_message_fields(attrs, message_vars) do
+    attrs[:interactive_content]
+    |> MessageVarParser.parse_map(message_vars)
+    |> InteractiveTemplates.clean_template_title()
+    |> then(&Map.merge(attrs, %{interactive_content: &1}))
+  end
 
   @doc false
   @spec create_and_send_otp_verification_message(Contact.t(), String.t()) ::
@@ -668,9 +669,6 @@ defmodule Glific.Messages do
   @spec create_and_send_message_to_group(map(), Group.t(), atom()) :: {:ok, list()}
   def create_and_send_message_to_group(message_params, group, type) do
     contact_ids = Groups.contact_ids(group.id)
-
-    if length(contact_ids) > 32 do
-    end
 
     {:ok, group_message} =
       if type == :session,
@@ -1214,8 +1212,10 @@ defmodule Glific.Messages do
   defp do_validate_headers(headers, "document", _url),
     do: String.contains?(headers["content-type"], ["pdf", "docx", "xlxs"])
 
-  defp do_validate_headers(headers, "sticker", _url),
-    do: String.contains?(headers["content-type"], "image")
+  ## sometimes webp files does not return any content type. We need to figure out another way to validate this
+  defp do_validate_headers(headers, "sticker", url),
+    do:
+      String.contains?(url, [".webp"]) && String.contains?(headers["content-type"], ["image", ""])
 
   defp do_validate_headers(headers, type, _url) when type in ["image", "video", "audio"],
     do: String.contains?(headers["content-type"], type)
@@ -1242,17 +1242,24 @@ defmodule Glific.Messages do
       |> String.downcase()
       |> String.replace(".", "")
 
+    ## mime type
+    ## We need to figure out a better way to get the mime type. May be MIME::type(url)
     mime_types = [
       {:image, ["png", "jpg", "jpeg"]},
       {:video, ["mp4", "3gp", "3gpp"]},
-      {:audio, ["mp3", "wav", "acc"]},
-      {:document, ["pdf", "docx", "xlxs"]}
+      {:audio, ["mp3", "wav", "acc", "ogg"]},
+      {:document, ["pdf", "docx", "xlsx"]},
+      {:sticker, ["webp"]}
     ]
 
     Enum.find(mime_types, fn {_type, extension_list} -> extension in extension_list end)
     |> case do
-      {type, _} -> {type, url}
-      _ -> {:text, nil}
+      {type, _} ->
+        {type, url}
+
+      _ ->
+        Logger.info("Could not find media type for extension: #{extension}")
+        {:text, nil}
     end
   end
 
