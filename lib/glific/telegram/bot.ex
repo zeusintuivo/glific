@@ -4,10 +4,10 @@ defmodule Glific.Telegram.Bot do
 
   use ExGram.Bot,
     name: @bot,
-    setup_commands: true
+    setup_commands: false
 
-  command("start")
-  command("help", description: "Print the bot's help")
+  # command("start")
+  # command("help", description: "Print the bot's help")
 
   middleware(ExGram.Middleware.IgnoreUsername)
 

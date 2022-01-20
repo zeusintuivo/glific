@@ -55,7 +55,7 @@ defmodule Glific.Application do
       ExGram,
       {Glific.Telegram.Bot,
        [
-         method: :polling,
+         method: if(Application.fetch_env!(:glific, :environment) == :test, do: :noup, else: :polling),
          token: Application.fetch_env!(:ex_gram, :token)
        ]}
     ]
