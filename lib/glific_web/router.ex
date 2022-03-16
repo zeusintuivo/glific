@@ -53,7 +53,7 @@ defmodule GlificWeb.Router do
   scope "/", GlificWeb do
     pipe_through [:browser]
 
-    live "/liveview", StatsLive
+    live "/liveview", PageLive
   end
 
   use GlificWeb.InjectOban

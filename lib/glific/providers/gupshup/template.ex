@@ -78,8 +78,8 @@ defmodule Glific.Providers.Gupshup.Template do
   @doc """
   Updating HSM templates for an organization
   """
-  @spec update_hsm_templates(non_neg_integer()) :: :ok | {:error, String.t()}
-  def update_hsm_templates(organization_id) do
+  @spec fetch_hsms(non_neg_integer()) :: :ok | {:error, String.t()}
+  def fetch_hsms(organization_id) do
     organization = Partners.organization(organization_id)
 
     with {:ok, response} <-

@@ -777,7 +777,7 @@ defmodule Glific.Flows.FlowContext do
     """
     |> Repo.query!([], timeout: 60_000, skip_organization_id: true)
 
-    Logger.info("Deleting flow contexts older than #{back} days")
+    Logger.info("Deleting flow contexts older than #{back} days.")
 
     :ok
   end
