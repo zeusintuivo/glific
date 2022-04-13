@@ -117,7 +117,7 @@ defmodule GlificWeb.Router do
   end
 
   scope "/flow-editor", GlificWeb.Flows do
-    # pipe_through [:api, :api_protected]
+    pipe_through [:api, :api_protected]
 
     get "/groups", FlowEditorController, :groups
     post "/groups", FlowEditorController, :groups_post
@@ -167,6 +167,7 @@ defmodule GlificWeb.Router do
 
     get "/attachments-enabled", FlowEditorController, :attachments_enabled
 
+    pipe_through [:api, :api_protected]
     post "/flow-attachment", FlowEditorController, :flow_attachment
   end
 

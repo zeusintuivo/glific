@@ -18,9 +18,12 @@ defmodule GlificWeb.Endpoint do
   # create pow_config for authentication
   @pow_config otp_app: :glific
 
-  socket "/socket", GlificWeb.UserSocket,
-    websocket: [connect_info: [pow_config: @pow_config]],
-    longpoll: false
+  socket "/socket", GlificWeb.GraphqlWSSocket,
+    websocket: [
+      connect_info: [pow_config: @pow_config],
+      path: "",
+      subprotocols: ["graphql-transport-ws"]
+    ]
 
   socket "/live", Phoenix.LiveView.Socket, websocket: [connect_info: [session: @session_options]]
 

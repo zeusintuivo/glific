@@ -109,7 +109,7 @@ defmodule Glific.MixProject do
       {:httpoison, "~> 1.6"},
       {:poison, "~> 4.0"},
       {:ex_rated, "~> 2.0"},
-      {:absinthe, "~> 1.5"},
+      {:absinthe, "~> 1.6"},
       {:absinthe_plug, "~> 1.5"},
       {:absinthe_phoenix, "~> 2.0"},
       {:dataloader, "~> 1.0"},
@@ -154,7 +154,8 @@ defmodule Glific.MixProject do
       {:exvcr, "~> 0.13", only: @test_envs},
       {:dotenvy, "~> 0.1"},
       {:phoenix_swoosh, "~> 1.0"},
-      {:gen_smtp, "~> 1.1"}
+      {:gen_smtp, "~> 1.1"},
+      {:absinthe_graphql_ws, "~> 0.1"}
     ]
   end
 
